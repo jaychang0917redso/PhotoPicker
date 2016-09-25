@@ -1,9 +1,11 @@
 package com.jaychang.npp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -12,12 +14,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.ColorRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,6 +60,7 @@ public class GalleryActivity extends AppCompatActivity {
   private GalleryCursorAdapter galleryCursorAdapter;
   private RecyclerView recyclerView;
   private MenuItem doneMenuItem;
+  private Toolbar toolbar;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +110,7 @@ public class GalleryActivity extends AppCompatActivity {
     selectedBorderDrawable = new GradientDrawable();
     selectedBorderDrawable.setStroke(6, ContextCompat.getColor(this, selectedBorderColor));
 
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    toolbar = (Toolbar) findViewById(R.id.toolbar);
     toolbar.setTitle(R.string.npp_all_photos);
     toolbar.setBackgroundColor(ContextCompat.getColor(this, toolbarColor));
     toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -135,6 +141,20 @@ public class GalleryActivity extends AppCompatActivity {
       doneMenuItem.setVisible(false);
     } else {
       doneMenuItem.setVisible(true);
+    }
+    updateToolbar();
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.done) {
+      Intent intent = new Intent();
+      Photo[] photos = new Photo[selectedPhotos.size()];
+      selectedPhotos.values().toArray(photos);
+      intent.putExtra(NPhotoPicker.EXTRA_SELECTED_PHOTOS, photos);
+      setResult(Activity.RESULT_OK, intent);
+      finish();
     }
     return true;
   }
@@ -181,28 +201,44 @@ public class GalleryActivity extends AppCompatActivity {
         .centerCrop()
         .into(viewHolder.photoView);
 
+      if (isSelected(photoId)) {
+        viewHolder.photoView.setSelected(true);
+      } else {
+        viewHolder.photoView.setSelected(false);
+      }
+      if (isOverLimit() && !isSelected(photoId)) {
+        viewHolder.photoView.setEnabled(false);
+      } else {
+        viewHolder.photoView.setEnabled(true);
+      }
+
       viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          if (selectedPhotos.size() >= limit) {
-            // todo
+          if (isOverLimit() && !isSelected(photoId)) {
             return;
           }
 
-          if (selectedPhotos.containsKey(photoId)) {
+          if (isSelected(photoId)) {
             viewHolder.photoView.setSelected(false);
             selectedPhotos.remove(photoId);
             viewHolder.selectedIconView.setImageResource(0);
             viewHolder.borderView.setVisibility(View.GONE);
+            if (!isOverLimit()) {
+              notifyDataSetChanged();
+            }
           } else {
             viewHolder.photoView.setSelected(true);
             selectedPhotos.put(photoId, new Photo(imageUri, photoId));
             viewHolder.selectedIconView.setImageResource(selectedIcon);
             viewHolder.borderView.setVisibility(View.VISIBLE);
             viewHolder.borderView.setBackgroundDrawable(selectedBorderDrawable);
+            if (isOverLimit()) {
+              notifyDataSetChanged();
+            }
           }
 
-          updateLimitText();
+          updateToolbar();
         }
       });
 
@@ -214,15 +250,33 @@ public class GalleryActivity extends AppCompatActivity {
         viewHolder.borderView.setVisibility(View.GONE);
       }
     }
+
+    private boolean isOverLimit() {
+      return selectedPhotos.size() >= limit;
+    }
+
+    private boolean isSelected(int photoId) {
+      return selectedPhotos.containsKey(photoId);
+    }
   }
 
-  private void updateLimitText() {
+  private void updateToolbar() {
     if (selectedPhotos.size() <= 0) {
       doneMenuItem.setEnabled(false);
+      updateActionTextColor(R.color.npp_disable);
+      toolbar.setTitle(R.string.npp_all_photos);
     } else {
       doneMenuItem.setEnabled(true);
+      updateActionTextColor(android.R.color.white);
+      toolbar.setTitle(selectedPhotos.size() + "/" + limit);
     }
-    invalidateOptionsMenu();
+  }
+
+  private void updateActionTextColor(@ColorRes int color) {
+    SpannableString span = new SpannableString(getString(actionText));
+    int aColor = ContextCompat.getColor(this, color);
+    span.setSpan(new ForegroundColorSpan(aColor), 0, span.length(), 0);
+    doneMenuItem.setTitle(span);
   }
 
   private static class PhotoViewHolder extends RecyclerView.ViewHolder {

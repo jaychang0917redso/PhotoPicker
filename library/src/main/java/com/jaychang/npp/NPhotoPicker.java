@@ -12,7 +12,7 @@ import android.support.annotation.StringRes;
 
 public class NPhotoPicker {
 
-  private static final String EXTRA_SELECTED_PHOTOS = "EXTRA_SELECTED_PHOTOS";
+  static final String EXTRA_SELECTED_PHOTOS = "EXTRA_SELECTED_PHOTOS";
   static final String EXTRA_TOOLBAR_COLOR = "EXTRA_TOOLBAR_COLOR";
   static final String EXTRA_STATUS_BAR_COLOR = "EXTRA_STATUS_BAR_COLOR";
   static final String EXTRA_SELECTED_BORDER_COLOR = "EXTRA_SELECTED_BORDER_COLOR";
