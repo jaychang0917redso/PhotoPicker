@@ -30,15 +30,15 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void pickPhotos() {
-    NPhotoPicker.create(this)
+    NPhotoPicker.create()
       .toolbarColor(R.color.colorPrimary)
       .statusBarColor(R.color.colorPrimary)
+      .selectedBorderColor(R.color.colorPrimary)
+      .selectedIcon(R.drawable.ic_add)
       .actionText(R.string.add)
       .columnCount(3)
-      .limit(6)
+      .limit(12)
       .multiMode()
-      .selectedIcon(R.drawable.ic_photo_selected)
-      .selectedBorderColor(R.color.colorAccent)
       .startPhotoPickerForResult(this, CODE_PHOTO_PICKER);
   }
 

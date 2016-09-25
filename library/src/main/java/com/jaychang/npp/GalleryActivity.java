@@ -111,6 +111,7 @@ public class GalleryActivity extends AppCompatActivity {
     selectedBorderDrawable.setStroke(6, ContextCompat.getColor(this, selectedBorderColor));
 
     toolbar = (Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
     toolbar.setTitle(R.string.npp_all_photos);
     toolbar.setBackgroundColor(ContextCompat.getColor(this, toolbarColor));
     toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -119,7 +120,6 @@ public class GalleryActivity extends AppCompatActivity {
         finish();
       }
     });
-    setSupportActionBar(toolbar);
 
     if (Build.VERSION.SDK_INT >= 21) {
       getWindow().setStatusBarColor(ContextCompat.getColor(this, statusBarColor));
@@ -149,14 +149,18 @@ public class GalleryActivity extends AppCompatActivity {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.done) {
-      Intent intent = new Intent();
-      Photo[] photos = new Photo[selectedPhotos.size()];
-      selectedPhotos.values().toArray(photos);
-      intent.putExtra(NPhotoPicker.EXTRA_SELECTED_PHOTOS, photos);
-      setResult(Activity.RESULT_OK, intent);
-      finish();
+      notifySelectedPhotos();
     }
     return true;
+  }
+
+  private void notifySelectedPhotos() {
+    Intent intent = new Intent();
+    Photo[] photos = new Photo[selectedPhotos.size()];
+    selectedPhotos.values().toArray(photos);
+    intent.putExtra(NPhotoPicker.EXTRA_SELECTED_PHOTOS, photos);
+    setResult(Activity.RESULT_OK, intent);
+    finish();
   }
 
   private class GalleryLoaderCallback implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -199,13 +203,20 @@ public class GalleryActivity extends AppCompatActivity {
       Glide.with(viewHolder.itemView.getContext())
         .load(imageUri)
         .centerCrop()
+        .dontAnimate()
         .into(viewHolder.photoView);
 
       if (isSelected(photoId)) {
         viewHolder.photoView.setSelected(true);
+        viewHolder.selectedIconView.setImageResource(selectedIcon);
+        viewHolder.borderView.setVisibility(View.VISIBLE);
+        viewHolder.borderView.setBackgroundDrawable(selectedBorderDrawable);
       } else {
         viewHolder.photoView.setSelected(false);
+        viewHolder.selectedIconView.setImageResource(0);
+        viewHolder.borderView.setVisibility(View.GONE);
       }
+
       if (isOverLimit() && !isSelected(photoId)) {
         viewHolder.photoView.setEnabled(false);
       } else {
@@ -238,21 +249,18 @@ public class GalleryActivity extends AppCompatActivity {
             }
           }
 
+          if (isSingleMode) {
+            notifySelectedPhotos();
+            return;
+          }
+
           updateToolbar();
         }
       });
-
-      if (selectedPhotos.containsKey(photoId)) {
-        viewHolder.selectedIconView.setImageResource(selectedIcon);
-        viewHolder.borderView.setVisibility(View.VISIBLE);
-      } else {
-        viewHolder.selectedIconView.setImageResource(0);
-        viewHolder.borderView.setVisibility(View.GONE);
-      }
     }
 
     private boolean isOverLimit() {
-      return selectedPhotos.size() >= limit;
+      return limit != -1 && !isSingleMode && selectedPhotos.size() >= limit;
     }
 
     private boolean isSelected(int photoId) {
@@ -268,7 +276,9 @@ public class GalleryActivity extends AppCompatActivity {
     } else {
       doneMenuItem.setEnabled(true);
       updateActionTextColor(android.R.color.white);
-      toolbar.setTitle(selectedPhotos.size() + "/" + limit);
+      if (limit != -1) {
+        toolbar.setTitle(selectedPhotos.size() + " / " + limit);
+      }
     }
   }
 

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="npp_AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">?attr/colorPrimary</item>
-        <item name="colorPrimaryDark">?attr/colorPrimary</item>
         <item name="actionButtonStyle">@style/ActionButton</item>
     </style>
 

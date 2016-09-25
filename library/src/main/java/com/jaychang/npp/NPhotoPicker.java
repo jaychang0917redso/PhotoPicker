@@ -2,7 +2,6 @@ package com.jaychang.npp;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.annotation.ColorRes;
@@ -33,11 +32,11 @@ public class NPhotoPicker {
   private int columnCount;
   private boolean isSingleMode;
 
-  private NPhotoPicker(Context context) {
-    int primaryColor = Utils.getPrimaryColor(context);
+  private NPhotoPicker() {
+    int primaryColor = android.R.color.background_dark;
     toolbarColor = primaryColor;
     statusBarColor = primaryColor;
-    selectedBorderColor = primaryColor;
+    selectedBorderColor = R.color.npp_border;
     selectedIcon = R.drawable.ic_photo_selected;
     actionText = R.string.npp_done;
     limit = -1;
@@ -45,8 +44,8 @@ public class NPhotoPicker {
     isSingleMode = false;
   }
 
-  public static NPhotoPicker create(Context context) {
-    return new NPhotoPicker(context);
+  public static NPhotoPicker create() {
+    return new NPhotoPicker();
   }
 
   public NPhotoPicker toolbarColor(@ColorRes int toolbarColor) {
