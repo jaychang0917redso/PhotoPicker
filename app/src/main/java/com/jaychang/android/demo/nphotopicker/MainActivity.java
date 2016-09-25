@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
       .selectedIcon(R.drawable.ic_add)
       .actionText(R.string.add)
       .columnCount(3)
-      .limit(12)
+      .limit(2)
       .multiMode()
       .startPhotoPickerForResult(this, CODE_PHOTO_PICKER);
   }
