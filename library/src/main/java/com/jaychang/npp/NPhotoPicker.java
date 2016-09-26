@@ -110,7 +110,7 @@ public class NPhotoPicker {
     return this;
   }
 
-  public void pick(Activity activity, int requestCode) {
+  public void pick(Activity activity) {
     Intent intent = new Intent(activity, GalleryActivity.class);
     intent.putExtra(EXTRA_TOOLBAR_COLOR, toolbarColor);
     intent.putExtra(EXTRA_STATUS_BAR_COLOR, statusBarColor);
@@ -120,11 +120,11 @@ public class NPhotoPicker {
     intent.putExtra(EXTRA_COL_COUNT, columnCount);
     intent.putExtra(EXTRA_IS_SINGLE_MODE, isSingleMode);
     intent.putExtra(EXTRA_LIMIT, limit);
-    activity.startActivityForResult(intent, requestCode);
+    activity.startActivityForResult(intent, CODE_PHOTO_PICKER);
   }
 
-  public void pick(Fragment fragment, int requestCode) {
-    pick(fragment.getActivity(), requestCode);
+  public void pick(Fragment fragment) {
+    pick(fragment.getActivity());
   }
 
   public static Photo[] getResultPhotos(Intent data) {
