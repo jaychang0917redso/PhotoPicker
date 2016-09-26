@@ -10,8 +10,7 @@ import android.support.annotation.IntRange;
 import android.support.annotation.StringRes;
 
 import java.util.Arrays;
-
-import static android.app.Activity.RESULT_OK;
+import java.util.List;
 
 public class NPhotoPicker {
 
@@ -25,7 +24,6 @@ public class NPhotoPicker {
   static final String EXTRA_COL_COUNT = "EXTRA_COL_COUNT";
   static final String EXTRA_IS_SINGLE_MODE = "EXTRA_IS_SINGLE_MODE";
 
-  private static final int CODE_PHOTO_PICKER = 5566;
   static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1001;
 
   private int toolbarColor;
@@ -36,8 +34,6 @@ public class NPhotoPicker {
   private int limit;
   private int columnCount;
   private boolean isSingleMode;
-  private OnSinglePhotoPickListener onSinglePhotoPickListener;
-  private OnMultiPhotosPickListener onMultiPhotosPickListener;
 
   private NPhotoPicker() {
     int primaryColor = android.R.color.background_dark;
@@ -100,17 +96,7 @@ public class NPhotoPicker {
     return this;
   }
 
-  public NPhotoPicker onSinglePhotoPicked(OnSinglePhotoPickListener onSinglePhotoPickListener) {
-    this.onSinglePhotoPickListener = onSinglePhotoPickListener;
-    return this;
-  }
-
-  public NPhotoPicker onMultiPhotosPicked(OnMultiPhotosPickListener onMultiPhotosPickListener) {
-    this.onMultiPhotosPickListener = onMultiPhotosPickListener;
-    return this;
-  }
-
-  public void pick(Activity activity) {
+  public void pick(Activity activity, int requestCode) {
     Intent intent = new Intent(activity, GalleryActivity.class);
     intent.putExtra(EXTRA_TOOLBAR_COLOR, toolbarColor);
     intent.putExtra(EXTRA_STATUS_BAR_COLOR, statusBarColor);
@@ -120,33 +106,17 @@ public class NPhotoPicker {
     intent.putExtra(EXTRA_COL_COUNT, columnCount);
     intent.putExtra(EXTRA_IS_SINGLE_MODE, isSingleMode);
     intent.putExtra(EXTRA_LIMIT, limit);
-    activity.startActivityForResult(intent, CODE_PHOTO_PICKER);
+    activity.startActivityForResult(intent, requestCode);
   }
 
-  public void pick(Fragment fragment) {
-    pick(fragment.getActivity());
+  public void pick(Fragment fragment, int requestCode) {
+    pick(fragment.getActivity(), requestCode);
   }
 
-  public static Photo[] getResultPhotos(Intent data) {
+  public static List<Photo> getPickedPhotos(Intent data) {
     Parcelable[] parcelables = data.getParcelableArrayExtra(NPhotoPicker.EXTRA_SELECTED_PHOTOS);
     Photo[] photos = new Photo[parcelables.length];
     System.arraycopy(parcelables, 0, photos, 0, parcelables.length);
-    return photos;
+    return Arrays.asList(photos);
   }
-
-  private void setupPhotoPickedListener(int requestCode, int resultCode, Intent data) {
-    if (requestCode == CODE_PHOTO_PICKER && resultCode == RESULT_OK) {
-      Photo[] photos = NPhotoPicker.getResultPhotos(data);
-      if (isSingleMode && onSinglePhotoPickListener != null && photos.length > 0) {
-        onSinglePhotoPickListener.onSinglePhotoPicked(photos[0]);
-      } else if (!isSingleMode && onMultiPhotosPickListener != null && photos.length > 0) {
-        onMultiPhotosPickListener.onMultiPhotosPicked(Arrays.asList(photos));
-      }
-    }
-  }
-
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    setupPhotoPickedListener(requestCode, resultCode, data);
-  }
-
 }
