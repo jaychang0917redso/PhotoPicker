@@ -1,6 +1,9 @@
 package com.jaychang.npp;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.Context;
@@ -214,7 +217,7 @@ public class GalleryActivity extends AppCompatActivity {
       } else {
         viewHolder.layerView.setSelected(false);
         viewHolder.selectedIconView.setImageResource(0);
-        viewHolder.borderView.setVisibility(View.GONE);
+        viewHolder.borderView.setVisibility(View.INVISIBLE);
       }
 
       if (isOverLimit() && !isSelected(photoId)) {
@@ -230,23 +233,38 @@ public class GalleryActivity extends AppCompatActivity {
             return;
           }
 
+          ObjectAnimator cellAnim = AnimUtils.getBoundOutInAnimation(viewHolder.itemView);
+
           if (isSelected(photoId)) {
             viewHolder.layerView.setSelected(false);
             selectedPhotos.remove(photoId);
             viewHolder.selectedIconView.setImageResource(0);
-            viewHolder.borderView.setVisibility(View.GONE);
-            if (!isOverLimit()) {
-              notifyDataSetChanged();
-            }
+            viewHolder.borderView.setVisibility(View.INVISIBLE);
+            cellAnim.addListener(new AnimatorListenerAdapter() {
+              @Override
+              public void onAnimationEnd(Animator animation) {
+                if (!isOverLimit()) {
+                  notifyDataSetChanged();
+                }
+              }
+            });
+            cellAnim.start();
           } else {
             viewHolder.layerView.setSelected(true);
             selectedPhotos.put(photoId, new Photo(imageUri, photoId));
             viewHolder.selectedIconView.setImageResource(selectedIcon);
+            AnimUtils.boundIn(viewHolder.selectedIconView);
             viewHolder.borderView.setVisibility(View.VISIBLE);
             viewHolder.borderView.setBackgroundDrawable(selectedBorderDrawable);
-            if (isOverLimit()) {
-              notifyDataSetChanged();
-            }
+            cellAnim.addListener(new AnimatorListenerAdapter() {
+              @Override
+              public void onAnimationEnd(Animator animation) {
+                if (isOverLimit()) {
+                  notifyDataSetChanged();
+                }
+              }
+            });
+            cellAnim.start();
           }
 
           if (isSingleMode) {
