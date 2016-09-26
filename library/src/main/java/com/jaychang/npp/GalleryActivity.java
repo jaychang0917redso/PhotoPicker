@@ -207,20 +207,20 @@ public class GalleryActivity extends AppCompatActivity {
         .into(viewHolder.photoView);
 
       if (isSelected(photoId)) {
-        viewHolder.layerView.setSelected(true);
+        viewHolder.photoView.setSelected(true);
         viewHolder.selectedIconView.setImageResource(selectedIcon);
         viewHolder.borderView.setVisibility(View.VISIBLE);
         viewHolder.borderView.setBackgroundDrawable(selectedBorderDrawable);
       } else {
-        viewHolder.layerView.setSelected(false);
+        viewHolder.photoView.setSelected(false);
         viewHolder.selectedIconView.setImageResource(0);
         viewHolder.borderView.setVisibility(View.GONE);
       }
 
       if (isOverLimit() && !isSelected(photoId)) {
-        viewHolder.layerView.setEnabled(false);
+        viewHolder.photoView.setEnabled(false);
       } else {
-        viewHolder.layerView.setEnabled(true);
+        viewHolder.photoView.setEnabled(true);
       }
 
       viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -231,7 +231,7 @@ public class GalleryActivity extends AppCompatActivity {
           }
 
           if (isSelected(photoId)) {
-            viewHolder.layerView.setSelected(false);
+            viewHolder.photoView.setSelected(false);
             selectedPhotos.remove(photoId);
             viewHolder.selectedIconView.setImageResource(0);
             viewHolder.borderView.setVisibility(View.GONE);
@@ -239,7 +239,7 @@ public class GalleryActivity extends AppCompatActivity {
               notifyDataSetChanged();
             }
           } else {
-            viewHolder.layerView.setSelected(true);
+            viewHolder.photoView.setSelected(true);
             selectedPhotos.put(photoId, new Photo(imageUri, photoId));
             viewHolder.selectedIconView.setImageResource(selectedIcon);
             viewHolder.borderView.setVisibility(View.VISIBLE);
@@ -293,14 +293,12 @@ public class GalleryActivity extends AppCompatActivity {
     ImageView photoView;
     ImageView selectedIconView;
     View borderView;
-    View layerView;
 
     PhotoViewHolder(View itemView) {
       super(itemView);
       photoView = (ImageView) itemView.findViewById(R.id.photoView);
       selectedIconView = (ImageView) itemView.findViewById(R.id.selectedIconView);
       borderView = itemView.findViewById(R.id.borderView);
-      layerView = itemView.findViewById(R.id.layerView);
     }
   }
 
