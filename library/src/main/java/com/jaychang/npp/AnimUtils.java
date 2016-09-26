@@ -9,7 +9,7 @@ public class AnimUtils {
 
   public static void boundIn(View view) {
     view.animate().scaleX(0f).scaleY(0f).setDuration(0).start();
-    view.animate().scaleX(1f).scaleY(1f).setDuration(100).start();
+    view.animate().scaleX(1f).scaleY(1f).setDuration(150).start();
   }
 
   public static ObjectAnimator getBoundOutInAnimation(View view) {
