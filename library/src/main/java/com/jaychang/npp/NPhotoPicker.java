@@ -9,6 +9,10 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.IntRange;
 import android.support.annotation.StringRes;
 
+import java.util.Arrays;
+
+import static android.app.Activity.RESULT_OK;
+
 public class NPhotoPicker {
 
   static final String EXTRA_SELECTED_PHOTOS = "EXTRA_SELECTED_PHOTOS";
@@ -21,6 +25,7 @@ public class NPhotoPicker {
   static final String EXTRA_COL_COUNT = "EXTRA_COL_COUNT";
   static final String EXTRA_IS_SINGLE_MODE = "EXTRA_IS_SINGLE_MODE";
 
+  private static final int CODE_PHOTO_PICKER = 5566;
   static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1001;
 
   private int toolbarColor;
@@ -31,6 +36,8 @@ public class NPhotoPicker {
   private int limit;
   private int columnCount;
   private boolean isSingleMode;
+  private OnSinglePhotoPickListener onSinglePhotoPickListener;
+  private OnMultiPhotosPickListener onMultiPhotosPickListener;
 
   private NPhotoPicker() {
     int primaryColor = android.R.color.background_dark;
@@ -93,7 +100,17 @@ public class NPhotoPicker {
     return this;
   }
 
-  public void startPhotoPickerForResult(Activity activity, int requestCode) {
+  public NPhotoPicker onSinglePhotoPicked(OnSinglePhotoPickListener onSinglePhotoPickListener) {
+    this.onSinglePhotoPickListener = onSinglePhotoPickListener;
+    return this;
+  }
+
+  public NPhotoPicker onMultiPhotosPicked(OnMultiPhotosPickListener onMultiPhotosPickListener) {
+    this.onMultiPhotosPickListener = onMultiPhotosPickListener;
+    return this;
+  }
+
+  public void pick(Activity activity, int requestCode) {
     Intent intent = new Intent(activity, GalleryActivity.class);
     intent.putExtra(EXTRA_TOOLBAR_COLOR, toolbarColor);
     intent.putExtra(EXTRA_STATUS_BAR_COLOR, statusBarColor);
@@ -106,8 +123,8 @@ public class NPhotoPicker {
     activity.startActivityForResult(intent, requestCode);
   }
 
-  public void startPhotoPickerForResult(Fragment fragment, int requestCode) {
-    startPhotoPickerForResult(fragment.getActivity(), requestCode);
+  public void pick(Fragment fragment, int requestCode) {
+    pick(fragment.getActivity(), requestCode);
   }
 
   public static Photo[] getResultPhotos(Intent data) {
@@ -116,4 +133,20 @@ public class NPhotoPicker {
     System.arraycopy(parcelables, 0, photos, 0, parcelables.length);
     return photos;
   }
+
+  private void setupPhotoPickedListener(int requestCode, int resultCode, Intent data) {
+    if (requestCode == CODE_PHOTO_PICKER && resultCode == RESULT_OK) {
+      Photo[] photos = NPhotoPicker.getResultPhotos(data);
+      if (isSingleMode && onSinglePhotoPickListener != null && photos.length > 0) {
+        onSinglePhotoPickListener.onSinglePhotoPicked(photos[0]);
+      } else if (!isSingleMode && onMultiPhotosPickListener != null && photos.length > 0) {
+        onMultiPhotosPickListener.onMultiPhotosPicked(Arrays.asList(photos));
+      }
+    }
+  }
+
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    setupPhotoPickedListener(requestCode, resultCode, data);
+  }
+
 }
