@@ -233,7 +233,7 @@ public class GalleryActivity extends AppCompatActivity {
             return;
           }
 
-          ObjectAnimator cellAnim = AnimUtils.getBoundOutInAnimation(viewHolder.itemView);
+          ObjectAnimator cellAnim = AnimUtils.getReboundAnimation(viewHolder.itemView);
 
           if (isSelected(photoId)) {
             viewHolder.layerView.setSelected(false);
@@ -253,7 +253,7 @@ public class GalleryActivity extends AppCompatActivity {
             viewHolder.layerView.setSelected(true);
             selectedPhotos.put(photoId, new Photo(imageUri, photoId));
             viewHolder.selectedIconView.setImageResource(selectedIcon);
-            AnimUtils.boundIn(viewHolder.selectedIconView);
+            AnimUtils.scaleIn(viewHolder.selectedIconView);
             viewHolder.borderView.setVisibility(View.VISIBLE);
             viewHolder.borderView.setBackgroundDrawable(selectedBorderDrawable);
             cellAnim.addListener(new AnimatorListenerAdapter() {
