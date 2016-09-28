@@ -14,7 +14,7 @@ public class Photo implements Parcelable {
     photoId = in.readInt();
   }
 
-  Photo(Uri uri, int photoId) {
+  public Photo(Uri uri, int photoId) {
     this.uri = uri;
     this.photoId = photoId;
   }
