@@ -1,8 +1,11 @@
 package com.jaychang.npp;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 
 public class Photo implements Parcelable {
 
@@ -21,6 +24,21 @@ public class Photo implements Parcelable {
 
   public Uri getUri() {
     return uri;
+  }
+
+  public String getPath(Context context) {
+    Cursor cursor = null;
+    try {
+      String[] projection = {MediaStore.Images.Media.DATA};
+      cursor = context.getContentResolver().query(uri, projection, null, null, null);
+      int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+      cursor.moveToFirst();
+      return cursor.getString(column_index);
+    } finally {
+      if (cursor != null) {
+        cursor.close();
+      }
+    }
   }
 
   int getId() {
