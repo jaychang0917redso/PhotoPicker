@@ -1,7 +1,7 @@
 package com.jaychang.npp;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.annotation.ColorRes;
