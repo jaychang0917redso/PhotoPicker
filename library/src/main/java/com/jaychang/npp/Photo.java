@@ -22,18 +22,14 @@ public class Photo implements Parcelable {
     this.photoId = photoId;
   }
 
-  public Uri getUri() {
-    return uri;
-  }
-
-  public String getPath(Context context) {
+  public Uri getUri(Context context) {
     Cursor cursor = null;
     try {
       String[] projection = {MediaStore.Images.Media.DATA};
       cursor = context.getContentResolver().query(uri, projection, null, null, null);
       int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
       cursor.moveToFirst();
-      return cursor.getString(column_index);
+      return Uri.parse(cursor.getString(column_index));
     } finally {
       if (cursor != null) {
         cursor.close();
