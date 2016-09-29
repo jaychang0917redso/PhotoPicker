@@ -22,6 +22,10 @@ public class Photo implements Parcelable {
     this.photoId = photoId;
   }
 
+  public Uri getUri() {
+    return uri;
+  }
+
   public Uri getUri(Context context) {
     Cursor cursor = null;
     try {
