@@ -1,13 +1,14 @@
 package com.jaychang.npp;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.app.Fragment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -97,6 +98,17 @@ public class NPhotoPicker {
   }
 
   public void pick(Activity activity, int requestCode) {
+    Intent intent = getIntent(activity);
+    activity.startActivityForResult(intent, requestCode);
+  }
+
+  public void pick(Fragment fragment, int requestCode) {
+    Intent intent = getIntent(fragment.getActivity());
+    fragment.startActivityForResult(intent, requestCode);
+  }
+
+  @NonNull
+  private Intent getIntent(Activity activity) {
     Intent intent = new Intent(activity, GalleryActivity.class);
     intent.putExtra(EXTRA_TOOLBAR_COLOR, toolbarColor);
     intent.putExtra(EXTRA_STATUS_BAR_COLOR, statusBarColor);
@@ -106,11 +118,7 @@ public class NPhotoPicker {
     intent.putExtra(EXTRA_COL_COUNT, columnCount);
     intent.putExtra(EXTRA_IS_SINGLE_MODE, isSingleMode);
     intent.putExtra(EXTRA_LIMIT, limit);
-    activity.startActivityForResult(intent, requestCode);
-  }
-
-  public void pick(Fragment fragment, int requestCode) {
-    pick(fragment.getActivity(), requestCode);
+    return intent;
   }
 
   public static List<Photo> getPickedPhotos(Intent data) {
