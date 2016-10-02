@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.jaychang.android.demo.nphotopicker.MainActivity">
+    tools:context="com.jaychang.android.demo.nphotopicker.com.jaychang.demo.npp.MainActivity">
 
     <Button
         android:id="@+id/button"

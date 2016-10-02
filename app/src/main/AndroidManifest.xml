@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.jaychang.android.demo.nphotopicker"
+<manifest package="com.jaychang.demo.npp"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
@@ -7,7 +7,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/nphotopicker"
         android:supportsRtl="true">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.jaychang.demo.npp.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

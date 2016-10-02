@@ -1,4 +1,4 @@
-package com.jaychang.android.demo.nphotopicker;
+package com.jaychang.demo.npp;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.jaychang.android.demo.nphotopicker.R;
 import com.jaychang.npp.NPhotoPicker;
 import com.jaychang.npp.Photo;
 
