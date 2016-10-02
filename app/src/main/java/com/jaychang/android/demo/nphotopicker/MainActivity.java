@@ -12,10 +12,11 @@ import com.jaychang.npp.Photo;
 
 import java.util.List;
 
+import static com.jaychang.npp.NPhotoPicker.CODE_PHOTO_CROPPER;
+
 public class MainActivity extends AppCompatActivity {
 
   private String TAG = getClass().getSimpleName();
-  public static final int CODE_PHOTO_PICKER = 10001;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +42,12 @@ public class MainActivity extends AppCompatActivity {
       .columnCount(3)
       .limit(6)
       .multiMode()
-      .pick(this, CODE_PHOTO_PICKER);
+      .start(this);
   }
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == CODE_PHOTO_PICKER && resultCode == RESULT_OK) {
+    if (requestCode == CODE_PHOTO_CROPPER && resultCode == RESULT_OK) {
       List<Photo> photos = NPhotoPicker.getPickedPhotos(data);
       Log.i(TAG, "User selected " + photos.size() + " photos");
       for (Photo photo : photos) {
