@@ -3,9 +3,10 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <application android:theme="@style/npp_AppTheme">
+    <application android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".GalleryActivity"
+            android:theme="@style/npp_Theme"
             android:configChanges="keyboardHidden|screenSize|orientation"
             />
     </application>
