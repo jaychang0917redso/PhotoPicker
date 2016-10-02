@@ -13,7 +13,7 @@ import com.jaychang.npp.Photo;
 
 import java.util.List;
 
-import static com.jaychang.npp.NPhotoPicker.CODE_PHOTO_CROPPER;
+import static com.jaychang.npp.NPhotoPicker.REQUEST_PHOTO_PICKER;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == CODE_PHOTO_CROPPER && resultCode == RESULT_OK) {
+    if (requestCode == REQUEST_PHOTO_PICKER && resultCode == RESULT_OK) {
       List<Photo> photos = NPhotoPicker.getPickedPhotos(data);
       Log.i(TAG, "User selected " + photos.size() + " photos");
       for (Photo photo : photos) {

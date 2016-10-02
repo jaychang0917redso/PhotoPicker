@@ -25,8 +25,8 @@ public class NPhotoPicker {
   static final String EXTRA_COL_COUNT = "EXTRA_COL_COUNT";
   static final String EXTRA_IS_SINGLE_MODE = "EXTRA_IS_SINGLE_MODE";
 
-  static final int CODE_REQUEST_WRITE_EXTERNAL_STORAGE = 5001;
-  public static final int CODE_PHOTO_CROPPER = 5002;
+  static final int REQUEST_WRITE_EXTERNAL_STORAGE = 5001;
+  public static final int REQUEST_PHOTO_PICKER = 5002;
 
   private int toolbarColor;
   private int statusBarColor;
@@ -100,12 +100,12 @@ public class NPhotoPicker {
 
   public void start(Activity activity) {
     Intent intent = getIntent(activity);
-    activity.startActivityForResult(intent, CODE_PHOTO_CROPPER);
+    activity.startActivityForResult(intent, REQUEST_PHOTO_PICKER);
   }
 
   public void start(Fragment fragment) {
     Intent intent = getIntent(fragment.getActivity());
-    fragment.startActivityForResult(intent, CODE_PHOTO_CROPPER);
+    fragment.startActivityForResult(intent, REQUEST_PHOTO_PICKER);
   }
 
   @NonNull

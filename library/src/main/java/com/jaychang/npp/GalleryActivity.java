@@ -37,7 +37,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.HashMap;
 
-import static com.jaychang.npp.NPhotoPicker.CODE_REQUEST_WRITE_EXTERNAL_STORAGE;
+import static com.jaychang.npp.NPhotoPicker.REQUEST_WRITE_EXTERNAL_STORAGE;
 
 public class GalleryActivity extends AppCompatActivity {
 
@@ -78,7 +78,7 @@ public class GalleryActivity extends AppCompatActivity {
     } else {
       ActivityCompat.requestPermissions(this,
         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-        CODE_REQUEST_WRITE_EXTERNAL_STORAGE);
+        REQUEST_WRITE_EXTERNAL_STORAGE);
     }
   }
 
@@ -92,7 +92,7 @@ public class GalleryActivity extends AppCompatActivity {
   public void onRequestPermissionsResult(int requestCode,
                                          String permissions[],
                                          int[] grantResults) {
-    if (requestCode == CODE_REQUEST_WRITE_EXTERNAL_STORAGE &&
+    if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE &&
       grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       setupAfterGrantPermission();
     } else {
