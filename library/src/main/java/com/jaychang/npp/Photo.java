@@ -29,7 +29,7 @@ public class Photo implements Parcelable {
   public Uri getUri(Context context) {
     Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
     if (cursor == null) {
-      return Uri.parse(uri.getPath());
+      return uri;
     } else {
       cursor.moveToFirst();
       int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
