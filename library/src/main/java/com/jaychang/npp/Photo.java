@@ -27,17 +27,15 @@ public class Photo implements Parcelable {
   }
 
   public Uri getUri(Context context) {
-    Cursor cursor = null;
-    try {
-      String[] projection = {MediaStore.Images.Media.DATA};
-      cursor = context.getContentResolver().query(uri, projection, null, null, null);
-      int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+    Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+    if (cursor == null) {
+      return Uri.parse(uri.getPath());
+    } else {
       cursor.moveToFirst();
-      return Uri.parse(cursor.getString(column_index));
-    } finally {
-      if (cursor != null) {
-        cursor.close();
-      }
+      int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+      String path = cursor.getString(idx);
+      cursor.close();
+      return Uri.parse(path);
     }
   }
 
