@@ -10,7 +10,7 @@
         app:navigationIcon="@drawable/ic_back"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleTextAppearance="@style/Toolbar.Title"
+        app:titleTextAppearance="@style/npp_Toolbar.Title"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
     </android.support.v7.widget.Toolbar>

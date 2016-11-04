@@ -111,7 +111,7 @@ public class GalleryActivity extends AppCompatActivity {
     isSingleMode = getIntent().getBooleanExtra(NPhotoPicker.EXTRA_IS_SINGLE_MODE, false);
 
     selectedBorderDrawable = new GradientDrawable();
-    selectedBorderDrawable.setStroke(12, ContextCompat.getColor(this, selectedBorderColor));
+    selectedBorderDrawable.setStroke(8, ContextCompat.getColor(this, selectedBorderColor));
 
     toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="npp_Theme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="actionButtonStyle">@style/ActionButton</item>
+        <item name="actionButtonStyle">@style/npp_ActionButton</item>
     </style>
 
-    <style name="ActionButton" parent="@style/Widget.AppCompat.ActionButton">
+    <style name="npp_ActionButton" parent="@style/Widget.AppCompat.ActionButton">
         <item name="textAllCaps">false</item>
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <style name="npp_Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">18sp</item>
     </style>
 </resources>

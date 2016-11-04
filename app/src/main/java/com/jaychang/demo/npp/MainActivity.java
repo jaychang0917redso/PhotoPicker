@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.jaychang.android.demo.nphotopicker.R;
 import com.jaychang.npp.NPhotoPicker;
 import com.jaychang.npp.Photo;
 
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
       List<Photo> photos = NPhotoPicker.getPickedPhotos(data);
       Log.i(TAG, "User selected " + photos.size() + " photos");
       for (Photo photo : photos) {
-        Log.i(TAG, "URI: " + photo.getUri());
+        Log.i(TAG, "Uri: " + photo.getUri());
       }
     }
   }
