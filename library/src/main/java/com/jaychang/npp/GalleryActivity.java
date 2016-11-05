@@ -4,11 +4,9 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
-import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -35,13 +33,17 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 
-import static com.jaychang.npp.NPhotoPicker.REQUEST_WRITE_EXTERNAL_STORAGE;
+import rx.Observable;
+import rx.functions.Func1;
 
 public class GalleryActivity extends AppCompatActivity {
 
   private static final int CELL_SPACING = 2;
+  private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 5001;
 
   private static final String[] GALLERY_PROJECTION = new String[]{
     MediaStore.Images.Media._ID,
@@ -158,11 +160,24 @@ public class GalleryActivity extends AppCompatActivity {
   }
 
   private void notifySelectedPhotos() {
-    Intent intent = new Intent();
-    Photo[] photos = new Photo[selectedPhotos.size()];
-    selectedPhotos.values().toArray(photos);
-    intent.putExtra(NPhotoPicker.EXTRA_SELECTED_PHOTOS, photos);
-    setResult(Activity.RESULT_OK, intent);
+    List<Uri> uris = Observable.from(selectedPhotos.values())
+      .map(new Func1<Photo, Uri>() {
+        @Override
+        public Uri call(Photo photo) {
+          return photo.getUri(GalleryActivity.this);
+        }
+      })
+      .toList().toBlocking().single();
+
+    NPhotoPicker.getInstance().onPhotosPicked(uris);
+
+    finish();
+  }
+
+  private void notifySelectedPhoto() {
+    Uri uri = Uri.fromFile(new File(selectedPhotos.get(0).getUri(this).getPath()));
+    NPhotoPicker.getInstance().onPhotoPicked(uri);
+
     finish();
   }
 
@@ -268,7 +283,7 @@ public class GalleryActivity extends AppCompatActivity {
           }
 
           if (isSingleMode) {
-            notifySelectedPhotos();
+            notifySelectedPhoto();
             return;
           }
 

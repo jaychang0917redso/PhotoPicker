@@ -1,21 +1,22 @@
 package com.jaychang.npp;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
+import android.net.Uri;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
 
-import java.util.Arrays;
 import java.util.List;
+
+import rx.Observable;
+import rx.subjects.PublishSubject;
 
 public class NPhotoPicker {
 
-  static final String EXTRA_SELECTED_PHOTOS = "EXTRA_SELECTED_PHOTOS";
   static final String EXTRA_TOOLBAR_COLOR = "EXTRA_TOOLBAR_COLOR";
   static final String EXTRA_STATUS_BAR_COLOR = "EXTRA_STATUS_BAR_COLOR";
   static final String EXTRA_SELECTED_BORDER_COLOR = "EXTRA_SELECTED_BORDER_COLOR";
@@ -24,9 +25,6 @@ public class NPhotoPicker {
   static final String EXTRA_LIMIT = "EXTRA_LIMIT";
   static final String EXTRA_COL_COUNT = "EXTRA_COL_COUNT";
   static final String EXTRA_IS_SINGLE_MODE = "EXTRA_IS_SINGLE_MODE";
-
-  static final int REQUEST_WRITE_EXTERNAL_STORAGE = 5001;
-  public static final int REQUEST_PHOTO_PICKER = 5002;
 
   private int toolbarColor;
   private int statusBarColor;
@@ -37,7 +35,14 @@ public class NPhotoPicker {
   private int columnCount;
   private boolean isSingleMode;
 
-  private NPhotoPicker() {
+  @SuppressLint("StaticFieldLeak")
+  private static NPhotoPicker instance;
+  private Context appContext;
+  private PublishSubject photoEmitter;
+
+  private NPhotoPicker(Context context) {
+    appContext = context;
+
     int primaryColor = android.R.color.background_dark;
     toolbarColor = primaryColor;
     statusBarColor = primaryColor;
@@ -49,8 +54,15 @@ public class NPhotoPicker {
     isSingleMode = false;
   }
 
-  public static NPhotoPicker create() {
-    return new NPhotoPicker();
+  public static synchronized NPhotoPicker with(Context context) {
+    if (instance == null) {
+      instance = new NPhotoPicker(context.getApplicationContext());
+    }
+    return instance;
+  }
+
+  static NPhotoPicker getInstance() {
+    return instance;
   }
 
   public NPhotoPicker toolbarColor(@ColorRes int toolbarColor) {
@@ -88,29 +100,27 @@ public class NPhotoPicker {
     return this;
   }
 
-  public NPhotoPicker singleMode() {
-    this.isSingleMode = true;
-    return this;
+  public Observable<Uri> pickSinglePhoto() {
+    isSingleMode = true;
+    photoEmitter = PublishSubject.create();
+
+    Intent intent = getIntent(appContext);
+    appContext.startActivity(intent);
+    return photoEmitter;
   }
 
-  public NPhotoPicker multiMode() {
-    this.isSingleMode = false;
-    return this;
-  }
-
-  public void start(Activity activity) {
-    Intent intent = getIntent(activity);
-    activity.startActivityForResult(intent, REQUEST_PHOTO_PICKER);
-  }
-
-  public void start(Fragment fragment) {
-    Intent intent = getIntent(fragment.getActivity());
-    fragment.startActivityForResult(intent, REQUEST_PHOTO_PICKER);
+  public Observable<List<Uri>> pickMultiPhotos() {
+    isSingleMode = false;
+    photoEmitter = PublishSubject.create();
+    Intent intent = getIntent(appContext);
+    appContext.startActivity(intent);
+    return photoEmitter;
   }
 
   @NonNull
-  private Intent getIntent(Activity activity) {
-    Intent intent = new Intent(activity, GalleryActivity.class);
+  private Intent getIntent(Context context) {
+    Intent intent = new Intent(context, GalleryActivity.class);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     intent.putExtra(EXTRA_TOOLBAR_COLOR, toolbarColor);
     intent.putExtra(EXTRA_STATUS_BAR_COLOR, statusBarColor);
     intent.putExtra(EXTRA_SELECTED_BORDER_COLOR, selectedBorderColor);
@@ -122,10 +132,18 @@ public class NPhotoPicker {
     return intent;
   }
 
-  public static List<Photo> getPickedPhotos(Intent data) {
-    Parcelable[] parcelables = data.getParcelableArrayExtra(NPhotoPicker.EXTRA_SELECTED_PHOTOS);
-    Photo[] photos = new Photo[parcelables.length];
-    System.arraycopy(parcelables, 0, photos, 0, parcelables.length);
-    return Arrays.asList(photos);
+  void onPhotoPicked(Uri uri) {
+    if (photoEmitter != null) {
+      photoEmitter.onNext(uri);
+      photoEmitter.onCompleted();
+    }
   }
+
+  void onPhotosPicked(List<Uri> uris) {
+    if (photoEmitter != null) {
+      photoEmitter.onNext(uris);
+      photoEmitter.onCompleted();
+    }
+  }
+
 }

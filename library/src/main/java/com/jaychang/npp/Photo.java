@@ -7,6 +7,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 
+import java.io.File;
+
 public class Photo implements Parcelable {
 
   private final Uri uri;
@@ -22,10 +24,6 @@ public class Photo implements Parcelable {
     this.photoId = photoId;
   }
 
-  public Uri getUri() {
-    return uri;
-  }
-
   public Uri getUri(Context context) {
     Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
     if (cursor == null) {
@@ -35,7 +33,7 @@ public class Photo implements Parcelable {
       int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
       String path = cursor.getString(idx);
       cursor.close();
-      return Uri.parse(path);
+      return Uri.fromFile(new File(path));
     }
   }
 
