@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class GalleryActivity extends AppCompatActivity {
   private int columnCount;
   private boolean isSingleMode;
 
-  private final HashMap<Integer, Photo> selectedPhotos = new HashMap<>();
+  private final ArrayList<Photo> selectedPhotos = new ArrayList<>();
   private GalleryCursorAdapter galleryCursorAdapter;
   private RecyclerView recyclerView;
   private MenuItem doneMenuItem;
@@ -160,7 +161,7 @@ public class GalleryActivity extends AppCompatActivity {
   }
 
   private void notifySelectedPhotos() {
-    List<Uri> uris = Observable.from(selectedPhotos.values())
+    List<Uri> uris = Observable.from(selectedPhotos)
       .map(new Func1<Photo, Uri>() {
         @Override
         public Uri call(Photo photo) {
@@ -217,6 +218,7 @@ public class GalleryActivity extends AppCompatActivity {
     public void onBindViewHolder(final PhotoViewHolder viewHolder, Cursor cursor) {
       final int photoId = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID));
       final Uri imageUri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Integer.toString(photoId));
+      final Photo photo = new Photo(imageUri, photoId);
 
       Glide.with(viewHolder.itemView.getContext())
         .load(imageUri)
@@ -224,7 +226,7 @@ public class GalleryActivity extends AppCompatActivity {
         .dontAnimate()
         .into(viewHolder.photoView);
 
-      if (isSelected(photoId)) {
+      if (isSelected(photo)) {
         viewHolder.layerView.setSelected(true);
         viewHolder.selectedIconView.setImageResource(selectedIcon);
         viewHolder.borderView.setVisibility(View.VISIBLE);
@@ -235,7 +237,7 @@ public class GalleryActivity extends AppCompatActivity {
         viewHolder.borderView.setVisibility(View.INVISIBLE);
       }
 
-      if (isOverLimit() && !isSelected(photoId)) {
+      if (isOverLimit() && !isSelected(photo)) {
         viewHolder.layerView.setEnabled(false);
       } else {
         viewHolder.layerView.setEnabled(true);
@@ -244,15 +246,15 @@ public class GalleryActivity extends AppCompatActivity {
       viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          if (isOverLimit() && !isSelected(photoId)) {
+          if (isOverLimit() && !isSelected(photo)) {
             return;
           }
 
           ObjectAnimator cellAnim = AnimUtils.getReboundAnimation(viewHolder.itemView);
 
-          if (isSelected(photoId)) {
+          if (isSelected(photo)) {
             viewHolder.layerView.setSelected(false);
-            selectedPhotos.remove(photoId);
+            selectedPhotos.remove(photo);
             viewHolder.selectedIconView.setImageResource(0);
             viewHolder.borderView.setVisibility(View.INVISIBLE);
             cellAnim.addListener(new AnimatorListenerAdapter() {
@@ -266,7 +268,7 @@ public class GalleryActivity extends AppCompatActivity {
             cellAnim.start();
           } else {
             viewHolder.layerView.setSelected(true);
-            selectedPhotos.put(photoId, new Photo(imageUri, photoId));
+            selectedPhotos.add(photo);
             viewHolder.selectedIconView.setImageResource(selectedIcon);
             AnimUtils.scaleIn(viewHolder.selectedIconView);
             viewHolder.borderView.setVisibility(View.VISIBLE);
@@ -296,8 +298,8 @@ public class GalleryActivity extends AppCompatActivity {
       return limit != -1 && !isSingleMode && selectedPhotos.size() >= limit;
     }
 
-    private boolean isSelected(int photoId) {
-      return selectedPhotos.containsKey(photoId);
+    private boolean isSelected(Photo photo) {
+      return selectedPhotos.contains(photo);
     }
   }
 
