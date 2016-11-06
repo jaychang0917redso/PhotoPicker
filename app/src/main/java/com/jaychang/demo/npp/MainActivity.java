@@ -26,12 +26,7 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     Button button = (Button) findViewById(R.id.button);
-    button.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        pickPhotos();
-      }
-    });
+    button.setOnClickListener(view -> pickPhotos());
 
     imageView = (ImageView) findViewById(R.id.imageView);
   }
@@ -46,13 +41,10 @@ public class MainActivity extends AppCompatActivity {
       .columnCount(3)
       .limit(6)
       .pickMultiPhotos()
-      .subscribe(new Action1<List<Uri>>() {
-        @Override
-        public void call(List<Uri> uris) {
-          Log.i(TAG, "Uri: " + uris.size());
-          Log.i(TAG, "Uri: " + uris.get(0).toString());
-          Glide.with(MainActivity.this).load(uris.get(0)).into(imageView);
-        }
+      .subscribe(uri -> {
+        Log.d(TAG, "uri size: " + uri.size());
+        Log.d(TAG, "uri: " + uri.get(0));
+        Glide.with(MainActivity.this).load(uri.get(0)).into(imageView);
       });
   }
 
