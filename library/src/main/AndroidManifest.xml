@@ -7,7 +7,7 @@
         <activity
             android:name=".GalleryActivity"
             android:theme="@style/npp_Theme"
-            android:configChanges="keyboardHidden|screenSize|orientation"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             />
     </application>
 
