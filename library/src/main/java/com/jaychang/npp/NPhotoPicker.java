@@ -10,6 +10,8 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -134,14 +136,16 @@ public class NPhotoPicker {
 
   void onPhotoPicked(Uri uri) {
     if (photoEmitter != null) {
-      photoEmitter.onNext(uri);
+      Uri copy = Uri.fromFile(new File(uri.getPath()));
+      photoEmitter.onNext(copy);
       photoEmitter.onCompleted();
     }
   }
 
   void onPhotosPicked(List<Uri> uris) {
     if (photoEmitter != null) {
-      photoEmitter.onNext(uris);
+      List<Uri> copy = new ArrayList<>(uris);
+      photoEmitter.onNext(copy);
       photoEmitter.onCompleted();
     }
   }

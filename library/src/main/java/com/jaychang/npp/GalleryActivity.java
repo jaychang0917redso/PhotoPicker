@@ -176,8 +176,7 @@ public class GalleryActivity extends AppCompatActivity {
   }
 
   private void notifySelectedPhoto() {
-    Uri uri = Uri.fromFile(new File(selectedPhotos.get(0).getUri(this).getPath()));
-    NPhotoPicker.getInstance().onPhotoPicked(uri);
+    NPhotoPicker.getInstance().onPhotoPicked(selectedPhotos.get(0).getUri(this));
 
     finish();
   }
