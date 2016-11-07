@@ -8,10 +8,17 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/pickPhotoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pick Photos"
+        android:text="Pick photos from album"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/takePhotoButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Take photo from camera"
         android:textAllCaps="false" />
 
     <ImageView

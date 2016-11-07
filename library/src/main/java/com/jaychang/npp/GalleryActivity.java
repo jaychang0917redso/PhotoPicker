@@ -96,7 +96,8 @@ public class GalleryActivity extends AppCompatActivity {
                                          String permissions[],
                                          int[] grantResults) {
     if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE &&
-      grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      grantResults.length > 0 &&
+      grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       setupAfterGrantPermission();
     } else {
       finish();

@@ -102,26 +102,22 @@ public class NPhotoPicker {
     return this;
   }
 
-  public Observable<Uri> pickSinglePhoto() {
+  public Observable<Uri> pickSinglePhotoFromAlbum() {
     isSingleMode = true;
     photoEmitter = PublishSubject.create();
-
-    Intent intent = getIntent(appContext);
-    appContext.startActivity(intent);
+    startGalleryActivity();
     return photoEmitter;
   }
 
-  public Observable<List<Uri>> pickMultiPhotos() {
+  public Observable<List<Uri>> pickMultiPhotosFromAblum() {
     isSingleMode = false;
     photoEmitter = PublishSubject.create();
-    Intent intent = getIntent(appContext);
-    appContext.startActivity(intent);
+    startGalleryActivity();
     return photoEmitter;
   }
 
-  @NonNull
-  private Intent getIntent(Context context) {
-    Intent intent = new Intent(context, GalleryActivity.class);
+  private void startGalleryActivity() {
+    Intent intent = new Intent(appContext, GalleryActivity.class);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     intent.putExtra(EXTRA_TOOLBAR_COLOR, toolbarColor);
     intent.putExtra(EXTRA_STATUS_BAR_COLOR, statusBarColor);
@@ -131,7 +127,16 @@ public class NPhotoPicker {
     intent.putExtra(EXTRA_COL_COUNT, columnCount);
     intent.putExtra(EXTRA_IS_SINGLE_MODE, isSingleMode);
     intent.putExtra(EXTRA_LIMIT, limit);
-    return intent;
+    appContext.startActivity(intent);
+  }
+
+  public Observable<Uri> takePhotoFromCamera() {
+    isSingleMode = false;
+    photoEmitter = PublishSubject.create();
+    Intent intent = new Intent(appContext, CameraHiddenActivity.class);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    appContext.startActivity(intent);
+    return photoEmitter;
   }
 
   void onPhotoPicked(Uri uri) {
@@ -148,6 +153,29 @@ public class NPhotoPicker {
       photoEmitter.onNext(copy);
       photoEmitter.onCompleted();
     }
+  }
+
+  void onError(Throwable throwable) {
+    if (photoEmitter != null) {
+      Throwable copy = new Throwable(throwable);
+      photoEmitter.onError(copy);
+    }
+  }
+
+  @Deprecated
+  public Observable<Uri> pickSinglePhoto() {
+    isSingleMode = true;
+    photoEmitter = PublishSubject.create();
+    startGalleryActivity();
+    return photoEmitter;
+  }
+
+  @Deprecated
+  public Observable<List<Uri>> pickMultiPhotos() {
+    isSingleMode = false;
+    photoEmitter = PublishSubject.create();
+    startGalleryActivity();
+    return photoEmitter;
   }
 
 }
