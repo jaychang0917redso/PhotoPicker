@@ -51,7 +51,7 @@ public class GalleryActivity extends AppCompatActivity {
   };
 
   private int toolbarColor;
-  private int toolbarTitleColor;
+  private int toolbarTitleTextColor;
   private int statusBarColor;
   private int selectedBorderColor;
   private GradientDrawable selectedBorderDrawable;
@@ -105,7 +105,7 @@ public class GalleryActivity extends AppCompatActivity {
 
   private void init() {
     toolbarColor = getIntent().getIntExtra(NPhotoPicker.EXTRA_TOOLBAR_COLOR, 0);
-    toolbarTitleColor = getIntent().getIntExtra(NPhotoPicker.EXTRA_TOOLBAR_TITLE_COLOR, 0);
+    toolbarTitleTextColor = getIntent().getIntExtra(NPhotoPicker.EXTRA_TOOLBAR_TITLE_COLOR, 0);
     statusBarColor = getIntent().getIntExtra(NPhotoPicker.EXTRA_STATUS_BAR_COLOR, 0);
     selectedBorderColor = getIntent().getIntExtra(NPhotoPicker.EXTRA_SELECTED_BORDER_COLOR, 0);
     selectedIcon = getIntent().getIntExtra(NPhotoPicker.EXTRA_SELECTED_ICON, 0);
@@ -121,7 +121,7 @@ public class GalleryActivity extends AppCompatActivity {
     setSupportActionBar(toolbar);
     toolbar.setTitle(R.string.npp_all_photos);
     toolbar.setBackgroundColor(ContextCompat.getColor(this, toolbarColor));
-    toolbar.setTitleTextColor(ContextCompat.getColor(this, toolbarTitleColor));
+    toolbar.setTitleTextColor(ContextCompat.getColor(this, toolbarTitleTextColor));
     toolbar.setNavigationOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
