@@ -48,7 +48,7 @@ public class NPhotoPicker {
 
     int primaryColor = android.R.color.background_dark;
     toolbarColor = primaryColor;
-    toolbarTitleTextColor = primaryColor;
+    toolbarTitleTextColor = android.R.color.white;
     statusBarColor = primaryColor;
     selectedBorderColor = R.color.npp_border;
     selectedIcon = R.drawable.ic_photo_selected;
