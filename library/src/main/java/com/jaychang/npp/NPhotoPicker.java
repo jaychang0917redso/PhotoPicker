@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
 import java.io.File;
@@ -20,6 +19,7 @@ import rx.subjects.PublishSubject;
 public class NPhotoPicker {
 
   static final String EXTRA_TOOLBAR_COLOR = "EXTRA_TOOLBAR_COLOR";
+  static final String EXTRA_TOOLBAR_TITLE_COLOR = "EXTRA_TOOLBAR_TITLE_COLOR";
   static final String EXTRA_STATUS_BAR_COLOR = "EXTRA_STATUS_BAR_COLOR";
   static final String EXTRA_SELECTED_BORDER_COLOR = "EXTRA_SELECTED_BORDER_COLOR";
   static final String EXTRA_SELECTED_ICON = "EXTRA_SELECTED_ICON";
@@ -29,6 +29,7 @@ public class NPhotoPicker {
   static final String EXTRA_IS_SINGLE_MODE = "EXTRA_IS_SINGLE_MODE";
 
   private int toolbarColor;
+  private int toolbarTitleColor;
   private int statusBarColor;
   private int selectedBorderColor;
   private int selectedIcon;
@@ -69,6 +70,11 @@ public class NPhotoPicker {
 
   public NPhotoPicker toolbarColor(@ColorRes int toolbarColor) {
     this.toolbarColor = toolbarColor;
+    return this;
+  }
+
+  public NPhotoPicker toolbarTextColor(@ColorRes int toolbarTextColor) {
+    this.toolbarTitleColor = toolbarTextColor;
     return this;
   }
 
@@ -120,6 +126,7 @@ public class NPhotoPicker {
     Intent intent = new Intent(appContext, GalleryActivity.class);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     intent.putExtra(EXTRA_TOOLBAR_COLOR, toolbarColor);
+    intent.putExtra(EXTRA_TOOLBAR_TITLE_COLOR, toolbarTitleColor);
     intent.putExtra(EXTRA_STATUS_BAR_COLOR, statusBarColor);
     intent.putExtra(EXTRA_SELECTED_BORDER_COLOR, selectedBorderColor);
     intent.putExtra(EXTRA_ACTION_TEXT, actionText);
