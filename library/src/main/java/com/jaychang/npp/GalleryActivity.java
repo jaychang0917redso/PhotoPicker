@@ -197,7 +197,11 @@ public class GalleryActivity extends AppCompatActivity {
   }
 
   private void notifySelectedPhoto() {
-    NPhotoPicker.getInstance().onPhotosPicked(Collections.singletonList(selectedPhotos.get(0).getUri(this)));
+    if (NPhotoPicker.getInstance().isSingleMode()) {
+      NPhotoPicker.getInstance().onPhotoPicked(selectedPhotos.get(0).getUri(this));
+    } else {
+      NPhotoPicker.getInstance().onPhotosPicked(Collections.singletonList(selectedPhotos.get(0).getUri(this)));
+    }
 
     finish();
   }
