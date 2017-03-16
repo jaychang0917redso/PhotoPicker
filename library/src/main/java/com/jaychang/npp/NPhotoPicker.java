@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
 import java.io.File;
@@ -26,6 +25,7 @@ public class NPhotoPicker {
   static final String EXTRA_ACTION_TEXT = "EXTRA_ACTION_TEXT";
   static final String EXTRA_LIMIT = "EXTRA_LIMIT";
   static final String EXTRA_COL_COUNT = "EXTRA_COL_COUNT";
+  static final String EXTRA_SHOW_CAMERA = "EXTRA_SHOW_CAMERA";
   static final String EXTRA_IS_SINGLE_MODE = "EXTRA_IS_SINGLE_MODE";
 
   private int toolbarColor;
@@ -36,6 +36,7 @@ public class NPhotoPicker {
   private int limit;
   private int columnCount;
   private boolean isSingleMode;
+  private boolean showCamera;
 
   @SuppressLint("StaticFieldLeak")
   private static NPhotoPicker instance;
@@ -53,6 +54,7 @@ public class NPhotoPicker {
     actionText = R.string.npp_done;
     limit = -1;
     columnCount = 3;
+    showCamera = true;
     isSingleMode = false;
   }
 
@@ -102,14 +104,19 @@ public class NPhotoPicker {
     return this;
   }
 
-  public Observable<Uri> pickSinglePhotoFromAlbum() {
+  public NPhotoPicker showCamera(boolean showCamera) {
+    this.showCamera = showCamera;
+    return this;
+  }
+
+  public Observable<Uri> pickSinglePhoto() {
     isSingleMode = true;
     photoEmitter = PublishSubject.create();
     startGalleryActivity();
     return photoEmitter;
   }
 
-  public Observable<List<Uri>> pickMultiPhotosFromAblum() {
+  public Observable<List<Uri>> pickMultiPhotos() {
     isSingleMode = false;
     photoEmitter = PublishSubject.create();
     startGalleryActivity();
@@ -125,6 +132,7 @@ public class NPhotoPicker {
     intent.putExtra(EXTRA_ACTION_TEXT, actionText);
     intent.putExtra(EXTRA_SELECTED_ICON, selectedIcon);
     intent.putExtra(EXTRA_COL_COUNT, columnCount);
+    intent.putExtra(EXTRA_SHOW_CAMERA, showCamera);
     intent.putExtra(EXTRA_IS_SINGLE_MODE, isSingleMode);
     intent.putExtra(EXTRA_LIMIT, limit);
     appContext.startActivity(intent);
@@ -160,22 +168,6 @@ public class NPhotoPicker {
       Throwable copy = new Throwable(throwable);
       photoEmitter.onError(copy);
     }
-  }
-
-  @Deprecated
-  public Observable<Uri> pickSinglePhoto() {
-    isSingleMode = true;
-    photoEmitter = PublishSubject.create();
-    startGalleryActivity();
-    return photoEmitter;
-  }
-
-  @Deprecated
-  public Observable<List<Uri>> pickMultiPhotos() {
-    isSingleMode = false;
-    photoEmitter = PublishSubject.create();
-    startGalleryActivity();
-    return photoEmitter;
   }
 
 }

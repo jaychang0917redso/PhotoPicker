@@ -33,9 +33,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import rx.Observable;
@@ -60,6 +58,7 @@ public class GalleryActivity extends AppCompatActivity {
   private int actionText;
   private int limit;
   private int columnCount;
+  private boolean showCamera;
   private boolean isSingleMode;
 
   private final ArrayList<Photo> selectedPhotos = new ArrayList<>();
@@ -112,6 +111,7 @@ public class GalleryActivity extends AppCompatActivity {
     actionText = getIntent().getIntExtra(NPhotoPicker.EXTRA_ACTION_TEXT, 0);
     limit = getIntent().getIntExtra(NPhotoPicker.EXTRA_LIMIT, -1);
     columnCount = getIntent().getIntExtra(NPhotoPicker.EXTRA_COL_COUNT, 3);
+    showCamera = getIntent().getBooleanExtra(NPhotoPicker.EXTRA_SHOW_CAMERA, true);
     isSingleMode = getIntent().getBooleanExtra(NPhotoPicker.EXTRA_IS_SINGLE_MODE, false);
 
     selectedBorderDrawable = new GradientDrawable();
@@ -142,6 +142,7 @@ public class GalleryActivity extends AppCompatActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.npp_menu, menu);
+
     doneMenuItem = menu.findItem(R.id.done);
     doneMenuItem.setTitle(actionText);
     if (isSingleMode) {
@@ -149,14 +150,21 @@ public class GalleryActivity extends AppCompatActivity {
     } else {
       doneMenuItem.setVisible(true);
     }
+
+    menu.findItem(R.id.camera).setVisible(showCamera);
+
     updateToolbar();
+
     return true;
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.done) {
+    int itemId = item.getItemId();
+    if (itemId == R.id.done) {
       notifySelectedPhotos();
+    } else if (itemId == R.id.camera) {
+      openCamera();
     }
     return true;
   }
@@ -174,6 +182,10 @@ public class GalleryActivity extends AppCompatActivity {
     NPhotoPicker.getInstance().onPhotosPicked(uris);
 
     finish();
+  }
+
+  private void openCamera() {
+    NPhotoPicker.getInstance().takePhotoFromCamera();
   }
 
   private void notifySelectedPhoto() {

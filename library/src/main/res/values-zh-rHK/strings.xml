@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="npp_done">完成</string>
+    <string name="npp_camera">相機</string>
     <string name="npp_all_photos">所有圖片</string>
 </resources>

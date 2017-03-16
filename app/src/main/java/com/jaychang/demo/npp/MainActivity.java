@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
       .actionText(R.string.add)
       .columnCount(3)
       .limit(6)
-      .pickMultiPhotosFromAblum()
+      .showCamera(true)
+      .pickMultiPhotos()
       .subscribe(uri -> {
         Log.d(TAG, "uri size: " + uri.size());
         Log.d(TAG, "uri: " + uri.get(0));
