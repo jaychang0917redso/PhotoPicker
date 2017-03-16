@@ -73,7 +73,7 @@ public class CameraHiddenActivity extends AppCompatActivity {
 
   private File createImageFile() throws IOException {
     String imageFileName = "Image_" + UUID.randomUUID() + ".jpg";
-    return new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + imageFileName);
+    return new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), imageFileName);
   }
 
   private void takePhoto() {

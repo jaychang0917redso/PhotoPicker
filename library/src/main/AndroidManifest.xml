@@ -6,7 +6,7 @@
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
-    <application android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+    <application>
         <activity
             android:name=".GalleryActivity"
             android:theme="@style/npp_Theme"
