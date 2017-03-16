@@ -148,12 +148,20 @@ public class NPhotoPicker {
   }
 
   public Observable<Uri> takePhotoFromCamera() {
-    isSingleMode = false;
+    isSingleMode = true;
     photoEmitter = PublishSubject.create();
     Intent intent = new Intent(appContext, CameraHiddenActivity.class);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     appContext.startActivity(intent);
     return photoEmitter;
+  }
+
+  boolean isSingleMode() {
+    return isSingleMode;
+  }
+
+  void setSingleMode(boolean singleMode) {
+    isSingleMode = singleMode;
   }
 
   void onPhotoPicked(Uri uri) {

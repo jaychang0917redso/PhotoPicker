@@ -39,10 +39,10 @@ public class MainActivity extends AppCompatActivity {
       .limit(6)
       .showCamera(true)
       .pickMultiPhotos()
-      .subscribe(uri -> {
-        Log.d(TAG, "uri size: " + uri.size());
-        Log.d(TAG, "uri: " + uri.get(0));
-        Glide.with(MainActivity.this).load(uri.get(0)).into(imageView);
+      .subscribe(uris -> {
+        Log.d(TAG, "uri size: " + uris.size());
+        Log.d(TAG, "uri: " + uris.get(0));
+        Glide.with(MainActivity.this).load(uris.get(0)).into(imageView);
       });
   }
 

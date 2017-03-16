@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -34,6 +35,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import rx.Observable;
@@ -188,11 +190,14 @@ public class GalleryActivity extends AppCompatActivity {
   }
 
   private void openCamera() {
-    NPhotoPicker.getInstance().takePhotoFromCamera();
+    Intent intent = new Intent(this, CameraHiddenActivity.class);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    startActivity(intent);
+    finish();
   }
 
   private void notifySelectedPhoto() {
-    NPhotoPicker.getInstance().onPhotoPicked(selectedPhotos.get(0).getUri(this));
+    NPhotoPicker.getInstance().onPhotosPicked(Collections.singletonList(selectedPhotos.get(0).getUri(this)));
 
     finish();
   }

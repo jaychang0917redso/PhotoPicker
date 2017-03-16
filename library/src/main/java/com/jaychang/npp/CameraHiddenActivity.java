@@ -16,6 +16,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.UUID;
 
 public class CameraHiddenActivity extends AppCompatActivity {
@@ -97,7 +98,11 @@ public class CameraHiddenActivity extends AppCompatActivity {
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == RC_CAMERA && resultCode == RESULT_OK && photoUri != null) {
-      NPhotoPicker.getInstance().onPhotoPicked(photoUri);
+      if (NPhotoPicker.getInstance().isSingleMode()) {
+        NPhotoPicker.getInstance().onPhotoPicked(photoUri);
+      } else {
+        NPhotoPicker.getInstance().onPhotosPicked(Collections.singletonList(photoUri));
+      }
     }
     finish();
   }
