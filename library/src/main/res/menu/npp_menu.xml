@@ -5,7 +5,7 @@
     <item
         android:id="@+id/camera"
         android:title="@string/npp_done"
-        android:icon="@drawable/ic_camera"
+        android:icon="@drawable/npp_ic_camera"
         app:showAsAction="ifRoom|withText"/>
 
     <item

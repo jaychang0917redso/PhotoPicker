@@ -53,7 +53,7 @@ public class NPhotoPicker {
     toolbarTitleTextColor = android.R.color.white;
     statusBarColor = primaryColor;
     selectedBorderColor = R.color.npp_border;
-    selectedIcon = R.drawable.ic_photo_selected;
+    selectedIcon = R.drawable.npp_ic_photo_selected;
     actionText = R.string.npp_done;
     limit = -1;
     columnCount = 3;
