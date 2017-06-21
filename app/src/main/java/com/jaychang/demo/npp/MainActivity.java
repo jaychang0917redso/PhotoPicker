@@ -30,14 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
   private void pickPhotosFromAlbum() {
     NPhotoPicker.with(this)
-      .toolbarColor(R.color.colorPrimary)
-      .statusBarColor(R.color.colorPrimary)
-      .selectedBorderColor(R.color.colorPrimary)
-      .selectedIcon(R.drawable.ic_add)
-      .actionText(R.string.add)
-      .columnCount(3)
-      .limit(6)
-      .showCamera(true)
+      .columnCount(2)
+      .limit(1)
       .pickMultiPhotos()
       .subscribe(uris -> {
         Log.d(TAG, "uri size: " + uris.size());

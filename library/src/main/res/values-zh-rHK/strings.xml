@@ -2,5 +2,7 @@
 <resources>
     <string name="npp_done">完成</string>
     <string name="npp_camera">相機</string>
+    <string name="npp_gallery">圖片</string>
+    <string name="npp_back">後退</string>
     <string name="npp_all_photos">所有圖片</string>
 </resources>

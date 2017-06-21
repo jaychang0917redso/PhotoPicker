@@ -1,9 +1,6 @@
 package com.jaychang.npp;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -13,26 +10,20 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.ColorRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.jaychang.utils.AppUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,12 +58,13 @@ public class GalleryActivity extends AppCompatActivity {
   private final ArrayList<Photo> selectedPhotos = new ArrayList<>();
   private GalleryCursorAdapter galleryCursorAdapter;
   private RecyclerView recyclerView;
-  private MenuItem doneMenuItem;
-  private Toolbar toolbar;
+  private KolToolbar toolbar;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    AppUtils.setStatusBarColor(this, android.R.color.transparent);
+    AppUtils.setContentBehindStatusBar(this);
     checkPermissions();
   }
 
@@ -121,57 +113,26 @@ public class GalleryActivity extends AppCompatActivity {
     selectedBorderDrawable = new GradientDrawable();
     selectedBorderDrawable.setStroke(8, ContextCompat.getColor(this, selectedBorderColor));
 
-    toolbar = (Toolbar) findViewById(R.id.toolbar);
-    setSupportActionBar(toolbar);
-    toolbar.setTitle(R.string.npp_all_photos);
-    toolbar.setBackgroundColor(ContextCompat.getColor(this, toolbarColor));
-    toolbar.setTitleTextColor(ContextCompat.getColor(this, toolbarTitleTextColor));
-    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+    toolbar = (KolToolbar) findViewById(R.id.toolbar);
+    toolbar.getLeftTextView().setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         finish();
       }
     });
-
-    if (Build.VERSION.SDK_INT >= 21) {
-      getWindow().setStatusBarColor(ContextCompat.getColor(this, statusBarColor));
-    }
+    toolbar.getRightTextView().setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        notifySelectedPhotos();
+      }
+    });
+    toolbar.getRightTextView().setVisibility(View.GONE);
 
     recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
     recyclerView.setLayoutManager(new GridLayoutManager(this, columnCount));
     recyclerView.addItemDecoration(GridSpacingItemDecoration.newBuilder().spacing(CELL_SPACING).build());
     galleryCursorAdapter = new GalleryCursorAdapter(this, null);
     recyclerView.setAdapter(galleryCursorAdapter);
-  }
-
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.npp_menu, menu);
-
-    doneMenuItem = menu.findItem(R.id.done);
-    doneMenuItem.setTitle(actionText);
-    if (isSingleMode) {
-      doneMenuItem.setVisible(false);
-    } else {
-      doneMenuItem.setVisible(true);
-    }
-
-    menu.findItem(R.id.camera).setVisible(showCamera);
-
-    updateToolbar();
-
-    return true;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    int itemId = item.getItemId();
-    if (itemId == R.id.done) {
-      notifySelectedPhotos();
-    } else if (itemId == R.id.camera) {
-      openCamera();
-    }
-    return true;
   }
 
   private void notifySelectedPhotos() {
@@ -251,20 +212,9 @@ public class GalleryActivity extends AppCompatActivity {
         .into(viewHolder.photoView);
 
       if (isSelected(photo)) {
-        viewHolder.layerView.setSelected(true);
-        viewHolder.selectedIconView.setImageResource(selectedIcon);
-        viewHolder.borderView.setVisibility(View.VISIBLE);
-        viewHolder.borderView.setBackgroundDrawable(selectedBorderDrawable);
+        viewHolder.selectedIconView.setImageResource(R.drawable.btn_gallery_tick_on);
       } else {
-        viewHolder.layerView.setSelected(false);
-        viewHolder.selectedIconView.setImageResource(0);
-        viewHolder.borderView.setVisibility(View.INVISIBLE);
-      }
-
-      if (isOverLimit() && !isSelected(photo)) {
-        viewHolder.layerView.setEnabled(false);
-      } else {
-        viewHolder.layerView.setEnabled(true);
+        viewHolder.selectedIconView.setImageResource(R.drawable.btn_gallery_tick_off);
       }
 
       viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -274,38 +224,12 @@ public class GalleryActivity extends AppCompatActivity {
             return;
           }
 
-          ObjectAnimator cellAnim = AnimUtils.getReboundAnimation(viewHolder.itemView);
-
           if (isSelected(photo)) {
-            viewHolder.layerView.setSelected(false);
             selectedPhotos.remove(photo);
-            viewHolder.selectedIconView.setImageResource(0);
-            viewHolder.borderView.setVisibility(View.INVISIBLE);
-            cellAnim.addListener(new AnimatorListenerAdapter() {
-              @Override
-              public void onAnimationEnd(Animator animation) {
-                if (!isOverLimit()) {
-                  notifyDataSetChanged();
-                }
-              }
-            });
-            cellAnim.start();
+            viewHolder.selectedIconView.setImageResource(R.drawable.btn_gallery_tick_off);
           } else {
-            viewHolder.layerView.setSelected(true);
             selectedPhotos.add(photo);
-            viewHolder.selectedIconView.setImageResource(selectedIcon);
-            AnimUtils.scaleIn(viewHolder.selectedIconView);
-            viewHolder.borderView.setVisibility(View.VISIBLE);
-            viewHolder.borderView.setBackgroundDrawable(selectedBorderDrawable);
-            cellAnim.addListener(new AnimatorListenerAdapter() {
-              @Override
-              public void onAnimationEnd(Animator animation) {
-                if (isOverLimit()) {
-                  notifyDataSetChanged();
-                }
-              }
-            });
-            cellAnim.start();
+            viewHolder.selectedIconView.setImageResource(R.drawable.btn_gallery_tick_on);
           }
 
           if (isSingleMode) {
@@ -329,23 +253,10 @@ public class GalleryActivity extends AppCompatActivity {
 
   private void updateToolbar() {
     if (selectedPhotos.size() <= 0) {
-      doneMenuItem.setEnabled(false);
-      updateActionTextColor(R.color.npp_disable);
-      toolbar.setTitle(R.string.npp_all_photos);
+      toolbar.getRightTextView().setVisibility(View.GONE);
     } else {
-      doneMenuItem.setEnabled(true);
-      updateActionTextColor(android.R.color.white);
-      if (limit != -1) {
-        toolbar.setTitle(selectedPhotos.size() + " / " + limit);
-      }
+      toolbar.getRightTextView().setVisibility(View.VISIBLE);
     }
-  }
-
-  private void updateActionTextColor(@ColorRes int color) {
-    SpannableString span = new SpannableString(getString(actionText));
-    int aColor = ContextCompat.getColor(this, color);
-    span.setSpan(new ForegroundColorSpan(aColor), 0, span.length(), 0);
-    doneMenuItem.setTitle(span);
   }
 
   private static class PhotoViewHolder extends RecyclerView.ViewHolder {

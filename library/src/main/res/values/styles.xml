@@ -12,4 +12,14 @@
     <style name="npp_Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">18sp</item>
     </style>
+
+    <style name="npp_Toolbar">
+        <item name="android:background">@drawable/img_navbar_bg</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="npp_titleTextStyle">bold</item>
+        <item name="npp_titleTextSize">17sp</item>
+        <item name="npp_leftTextSize">17sp</item>
+        <item name="npp_rightTextSize">17sp</item>
+    </style>
 </resources>

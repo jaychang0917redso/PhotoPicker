@@ -1,23 +1,25 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <android.support.v7.widget.Toolbar
+    <com.jaychang.npp.KolToolbar
         android:id="@+id/toolbar"
-        app:navigationIcon="@drawable/npp_ic_back"
+        style="@style/npp_Toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleTextAppearance="@style/npp_Toolbar.Title"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-    </android.support.v7.widget.Toolbar>
+        app:npp_title="@string/npp_gallery"
+        app:npp_leftText="@string/npp_back"
+        app:npp_rightText="@string/npp_done"
+        app:npp_leftTextIcon="@drawable/btn_back_white" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
+        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
+        android:layout_marginTop="-6dp"
         android:layout_height="wrap_content" />
 
-</LinearLayout>
+</RelativeLayout>

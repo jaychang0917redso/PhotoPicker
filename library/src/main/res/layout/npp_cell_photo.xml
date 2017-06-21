@@ -23,7 +23,9 @@
     <ImageView
         android:id="@+id/selectedIconView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="right"
+        android:src="@drawable/btn_gallery_tick_off"
+        android:layout_margin="8dp"
+        android:layout_height="wrap_content" />
 
 </com.jaychang.npp.SquareFrameLayout>
