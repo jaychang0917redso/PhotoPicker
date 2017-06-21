@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="KolToolbar">
+        <attr name="npp_leftIcon" format="reference" />
+        <attr name="npp_leftText" format="reference|string" />
+        <attr name="npp_leftTextSize" format="dimension|reference" />
+        <attr name="npp_leftTextIcon" format="reference" />
+        <attr name="npp_leftTextIconPosition">
+            <enum name="left" value="0" />
+            <enum name="right" value="1" />
+        </attr>
+        <attr name="npp_leftTextColor" format="reference|color" />
+        <attr name="npp_leftTextStyle">
+            <flag name="normal" value="0" />
+            <flag name="bold" value="1" />
+            <flag name="italic" value="2" />
+        </attr>
+        <attr name="npp_titleIcon" format="reference" />
+        <attr name="npp_title" format="string" />
+        <attr name="npp_titleTextSize" format="dimension|reference" />
+        <attr name="npp_titleTextColor" format="reference|color" />
+        <attr name="npp_titleTextStyle">
+            <flag name="normal" value="0" />
+            <flag name="bold" value="1" />
+            <flag name="italic" value="2" />
+        </attr>
+        <attr name="npp_subtitle" format="string" />
+        <attr name="npp_subtitleTextSize" format="dimension" />
+        <attr name="npp_subtitleTextColor" format="reference|color" />
+        <attr name="npp_subtitleTextStyle">
+            <flag name="normal" value="0" />
+            <flag name="bold" value="1" />
+            <flag name="italic" value="2" />
+        </attr>
+        <attr name="npp_rightIcon" format="reference" />
+        <attr name="npp_rightIcon2" format="reference" />
+        <attr name="npp_rightText" format="string" />
+        <attr name="npp_rightTextIcon" format="reference" />
+        <attr name="npp_rightTextIconPosition">
+            <enum name="right" value="0" />
+            <enum name="left" value="1" />
+        </attr>
+        <attr name="npp_rightTextSize" format="dimension|reference" />
+        <attr name="npp_rightTextColor" format="reference|color" />
+        <attr name="npp_rightTextStyle">
+            <flag name="normal" value="0" />
+            <flag name="bold" value="1" />
+            <flag name="italic" value="2" />
+        </attr>
+        <attr name="npp_background" format="reference|color" />
+    </declare-styleable>
+</resources>

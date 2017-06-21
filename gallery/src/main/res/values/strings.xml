@@ -1,0 +1,7 @@
+<resources>
+    <string name="npp_done">Done</string>
+    <string name="npp_camera">Camera</string>
+    <string name="npp_gallery">Gallery</string>
+    <string name="npp_back">Back</string>
+    <string name="npp_all_photos">All Photos</string>
+</resources>
