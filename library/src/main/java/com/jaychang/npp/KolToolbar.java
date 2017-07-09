@@ -3,15 +3,19 @@ package com.jaychang.npp;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.jaychang.utils.AppUtils;
 
 public final class KolToolbar extends LinearLayout {
 
@@ -64,7 +68,7 @@ public final class KolToolbar extends LinearLayout {
   }
 
   private void inflateViews(Context context) {
-    View view = LayoutInflater.from(context).inflate(R.layout.view_kol_toolbar, this);
+    final View view = LayoutInflater.from(context).inflate(R.layout.view_kol_toolbar, this);
     leftIconView = (ImageView) view.findViewById(R.id.left_icon);
     leftTextView = (TextView) view.findViewById(R.id.left_text);
     titleIconView = (ImageView) view.findViewById(R.id.title_icon);
@@ -73,6 +77,17 @@ public final class KolToolbar extends LinearLayout {
     rightIconView = (ImageView) view.findViewById(R.id.right_icon);
     rightIcon2View = (ImageView) view.findViewById(R.id.right_icon_2);
     rightTextView = (TextView) view.findViewById(R.id.right_text);
+
+    view.post(new Runnable() {
+      @Override
+      public void run() {
+        if (Build.VERSION.SDK_INT < 21) {
+          ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+          layoutParams.height = view.getHeight() - AppUtils.dp2px(getContext(), 20);
+          view.setLayoutParams(layoutParams);
+        }
+      }
+    });
   }
 
   private void initAttrs(Context context, AttributeSet attrs, int defStyleAttr) {
