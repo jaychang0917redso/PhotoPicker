@@ -68,6 +68,11 @@ public class GalleryActivity extends AppCompatActivity {
     checkPermissions();
   }
 
+  @Override
+  protected void attachBaseContext(Context newBase) {
+    super.attachBaseContext(LangUtils.wrap(newBase));
+  }
+
   private void checkPermissions() {
     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
       == PackageManager.PERMISSION_GRANTED) {
