@@ -60,12 +60,11 @@ public class LangUtils {
         return locale;
       }
     } else {
-      Locale locale;
       if (Locale.getDefault().getLanguage().equalsIgnoreCase(Locale.ENGLISH.getLanguage())) {
-        locale = Locale.ENGLISH;
-      } else {
-        locale = new Locale(Locale.getDefault().getLanguage(), Locale.getDefault().getCountry());
+        return Locale.ENGLISH;
       }
+
+      Locale locale = new Locale(Locale.getDefault().getLanguage(), Locale.getDefault().getCountry());
 
       return defaultLocale != null ? defaultLocale : locale;
     }
