@@ -19,6 +19,8 @@ public class LangUtils {
   private static final String KEY_CURRENT_LANG = "KEY_CURRENT_LANG";
   private static final String KEY_CURRENT_COUNTRY = "KEY_CURRENT_COUNTRY";
 
+  private static Locale defaultLocale = null;
+
   public static void changeLanguage(Context context, Locale locale) {
     saveString(context, getKeyCurrentLang(context), locale.getLanguage());
     saveString(context, getKeyCurrentCountry(context), locale.getCountry());
@@ -48,15 +50,30 @@ public class LangUtils {
   }
 
   public static Locale getLocale(Context context) {
-    Locale result;
     String lang = getString(context, getKeyCurrentLang(context));
     String country = getString(context, getKeyCurrentCountry(context));
     if (!TextUtils.isEmpty(lang)) {
-      result = new Locale(lang, country);
+      Locale locale = new Locale(lang, country);
+      if (locale.getLanguage().equalsIgnoreCase(Locale.ENGLISH.getLanguage())) {
+        return Locale.ENGLISH;
+      } else {
+        return locale;
+      }
     } else {
-      result = Locale.TRADITIONAL_CHINESE;
+      Locale locale;
+      if (Locale.getDefault().getLanguage().equalsIgnoreCase(Locale.ENGLISH.getLanguage())) {
+        locale = Locale.ENGLISH;
+      } else {
+        locale = new Locale(Locale.getDefault().getLanguage(), Locale.getDefault().getCountry());
+      }
+
+      return defaultLocale != null ? defaultLocale : locale;
     }
-    return result;
+  }
+
+  public static void restore(Context context, Locale defaultLocale) {
+    LangUtils.defaultLocale = defaultLocale;
+    Locale.setDefault(getLocale(context));
   }
 
   private static String getKeyCurrentLang(Context context) {
